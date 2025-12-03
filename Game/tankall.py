@@ -25,7 +25,7 @@ class MainGame():
     #开始游戏方法
     def startGame(self):
         _display.init()
-        #创建窗口加载窗口(借鉴官方文档)
+        #创建窗口加载窗口
         MainGame.window = _display.set_mode([MainGame.SCREEN_WIDTH,MainGame.SCREEN_HEIGHT])
         self.creatMyTank()
         self.creatEnemyTank()
