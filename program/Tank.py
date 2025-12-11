@@ -99,7 +99,14 @@ class EnemyTank(Tank):
         self.stop = True
         #新增步数属性，用来控制敌方坦克随机移动
         self.step = 30
-
+        #追踪用户坦克的范围为300
+        self.chase_range = 300
+        #初始不追踪用户
+        self.chase = False
+        #初始追踪检测时间
+        self.last_chase = pygame.time.get_ticks()
+        
+    #随机方向
     def randDirection(self):
         num = random.randint(1,4)
         if num == 1:
@@ -110,14 +117,52 @@ class EnemyTank(Tank):
             return 'L'
         elif num == 4:
             return 'R'
+    #追踪玩家算法
+    def CheckPlayer(self):
+        from MainGame import MainGame
+        #每隔0.1秒检测一次用户范围
+        if self.last_chase % 100 != 0:
+            return self.chase
+        self.last_chase = pygame.time.get_ticks()
+        #计算距离
+        dx = MainGame.TANK_P1.rect.centerx - self.rect.centerx
+        dy = MainGame.TANK_P1.rect.centery - self.rect.centery
+        distance = (dx**2+dy**2)**0.5
+        if distance <= self.chase_range:
+            self.chase = True
+            return self.chase
+        else:
+            self.chase = False
+            return self.chase
+    
+    def ChasingPlayer(self):
+        from MainGame import MainGame
+        if MainGame.TANK_P1 and MainGame.TANK_P1.live:
+            #计算距离
+            dx = MainGame.TANK_P1.rect.centerx - self.rect.centerx
+            dy = MainGame.TANK_P1.rect.centery - self.rect.centery
+            #方向选择
+            if abs(dx) > abs(dy):
+                self.direction = 'R' if dx > 0 else 'L'
+            else:
+                self.direction = 'D' if dy > 0 else 'U'
+
     #随机移动
     def randMove(self):
-        if self.step <= 0:
-            self.direction = self.randDirection()
-            self.step = 50
-        else:
+        #10%的概率进入追踪状态,防止墙边卡死
+        ChasingChoice = random.randint(0,9)
+        if self.CheckPlayer() and ChasingChoice == 0:
+            self.ChasingPlayer()
             self.move()
-            self.step -= 1
+        #随机巡逻状态
+        else:
+            if self.step <= 0:
+                self.direction = self.randDirection()
+                self.step = 50
+            else: 
+                self.move()
+                self.step -= 1
+    
     def shot(self):
         import Bullet
         num = random.randint(1,1000)
