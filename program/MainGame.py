@@ -1,5 +1,5 @@
 import pygame,time,random
-import Tank,Music,Wall,Bullet
+import Tank,Music,Wall,Bullet,Base,Explode,Start,prototype
 
 MyTank = Tank.MyTank
 EnemyTank = Tank.EnemyTank
@@ -356,3 +356,4 @@ class MainGame():
         
     def endGame(self):
         exit()
+MainGame().startGame()
