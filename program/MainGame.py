@@ -1,5 +1,5 @@
 import pygame,time,random
-import Tank,Music,Wall,Bullet,Base,Explode,Start,prototype
+import Tank,Music,Wall,Bullet
 
 MyTank = Tank.MyTank
 EnemyTank = Tank.EnemyTank
