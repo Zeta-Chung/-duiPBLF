@@ -117,7 +117,7 @@ class EnemyTank(Tank):
             return 'L'
         elif num == 4:
             return 'R'
-    #追踪玩家算法
+    #检测玩家是否在追踪范围内
     def CheckPlayer(self):
         from MainGame import MainGame
         #每隔0.1秒检测一次用户范围
@@ -130,11 +130,11 @@ class EnemyTank(Tank):
         distance = (dx**2+dy**2)**0.5
         if distance <= self.chase_range:
             self.chase = True
-            return self.chase
         else:
             self.chase = False
-            return self.chase
+        return self.chase
     
+    #追踪玩家
     def ChasingPlayer(self):
         from MainGame import MainGame
         if MainGame.TANK_P1 and MainGame.TANK_P1.live:
@@ -147,7 +147,7 @@ class EnemyTank(Tank):
             else:
                 self.direction = 'D' if dy > 0 else 'U'
 
-    #随机移动
+    #敌方坦克移动
     def randMove(self):
         #10%的概率进入追踪状态,防止墙边卡死
         ChasingChoice = random.randint(0,9)
